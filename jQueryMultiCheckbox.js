@@ -19,14 +19,47 @@
         var op = $.extend({}, $.fn.multicheckbox.defaults, options);
 
         return this.each(function(idx){
-            // 初期化
+
             var $self = $(this),
                 self = $self.get(0);
 
-            var container_class = op.tags ? "mcb-container mcb-tags" : "mcb-container";
-                $container = $("<span></span>").addClass(container_class);
+            var container_class = op.tags ? 'mcb-container mcb-tags' : 'mcb-container';
+            $self[op.insert]('<span class="' + container_class+ '">test</span>');
+            var $container = (op.insert == 'before') ? $self.prev(): $self.next();
 
-            var checked = $self.val() ? $self.val().split(",") : [],
+            // label, input:checkbox の挿入
+            var label_html = [];
+            if (typeof(op.label) == 'object') {
+                if (op.sort != '') {
+                    var sort_rule = sortHashKey(op.label, op.sort);
+                    for (var i = 0, n = sort_rule.length; i < n; i++) {
+                        var key = sort_rule[i];
+                        label_html.push('<label class="mcb-label"><input type="checkbox" name="' + key + '" value="' + key + '" />' + op.label[key] + '</label>');
+                    }
+                } else {
+                    for (var key in op.label) {
+                        label_html.push('<label class="mcb-label"><input type="checkbox" name="' + key + '" value="' + key + '" />' + op.label[key] + '</label>');
+                    }
+                }
+            } else {
+                var checks = (op.label == '') ? $self.attr('title') : op.label,
+                    checks = checks.split(',');
+                for (var i = 0, n = checks.length; i < n; i++) {
+                    checks[i] = $.trim(checks[i]);
+                }
+                if (op.sort == 'ascend') {
+                    checks.sort();
+                } else if (op.sort == 'descend') {
+                    checks.sort();
+                    checks.reverse();
+                }
+                for (var i = 0, n = checks.length; i < n; i++) {
+                    label_html.push('<label class="mcb-label"><input type="checkbox" name="' + checks[i] + '" value="' + checks[i] + '" />' + checks[i] + '</label>');
+                }
+            }
+            $container.html(label_html.join(''));
+
+            var checked = $self.val() ? $self.val().split(',') : [],
                 checked_count = checked.length;
 
             for (var i = 0; i < checked_count; i++) {
