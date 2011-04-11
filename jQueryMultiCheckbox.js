@@ -20,36 +20,47 @@
 
         // 初期化
         var $self = this,
-            rcomma = new RegExp(" *, *","g");
-            self_val = $self.val() ? $self.val().replace(rcomma,",") : "";
+            self = this.get(0);
 
-        $self[op.show]().val(self_val);
-
-        var checked = self_val ? self_val.split(",") : [],
-            checked_count = checked.length,
-            container_class = op.tags ? "mcb-container mcb-tags" : "mcb-container";
+        var container_class = op.tags ? "mcb-container mcb-tags" : "mcb-container";
             $container = $("<span></span>").addClass(container_class);
-            
+
+        var checked = $self.val() ? $self.val().split(",") : [],
+            checked_count = checked.length;
+
+        for (var i = 0; i < checked_count; i++) {
+            checked[i] = $.trim(checked[i]);
+        }
+
+        $self[op.show]();
+
+        $.data(self, "mcb-lists", checked);
 
         // チェックボックスをクリックしたとき
         function checkboxClick(){
-            var value = $self.val() ? $self.val().replace(rcomma,",") + ",": "",
-                $cb = $(this);
-                
+            var checked = $.data(self, "mcb-lists"),
+                $cb = $(this),
+                value = $cb.val();
             if ($cb.is(":checked")) {
+                checked.push(value);
+                $.data(self, "mcb-lists", checked);
+                $self.val(checked.join(','));
                 $cb.closest("label").addClass("mcb-label-checked");
-                $self.val(value + $cb.val());
             } else {
+                checked = $.grep(checked, function(v, i){
+                    return value == v;
+                }, true);
+                $.data(self, "mcb-lists", checked);
+                $self.val(checked.join(','));
                 $cb.closest("label").removeClass("mcb-label-checked");
-                var reg = new RegExp("," + $cb.val() + ",","g");
-                value = "," + value;
-                $self.val(value.replace(reg,",").replace(/^,|,$/g,""));
             }
         }
+
         // チェックボックスとラベルを生成
-        function makeCheckbox(val,label,count,must){
+        function makeCheckbox(val, label, count, must){
             var $cb = $("<input/>").attr({"type":"checkbox","value":val}).addClass("mcb").click(checkboxClick);
             var $label = $("<label></label>").addClass("mcb-label");
+            var checked = $.data(self, "mcb-lists");
             if (count > 0) {
                 checked = $.grep(checked, function(elm,idx){
                     if (val == elm) {
@@ -67,6 +78,7 @@
             $label.text(label).prepend($cb);
             $self[op.insert]($container.append($label));
         }
+
         // ユーザーが追加したラベルを生成
         function makeAddCheckbox(arry){
             if (arry.length == 0) return;
