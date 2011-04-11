@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja" dir="ltr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <meta http-equiv="content-script-type" content="text/javascript" />
+    <title>普通のinput:textを複数選択チェックボックスに変更するjQueryプラグイン</title>
+    <style>
+    pre {
+        padding: 10px;
+        border: 1px solid #666666;
+        background: #E8E8E8;
+    }
+    .multicheck,.multicheck2,.multicheck3,.multicheck4,.multicheck5 {
+        width: 450px;
+    }
+    span.mcb-container {
+        display: block;
+    }
+    
+    /* ベースCSS */
+    span.mcb-container .mcb-label {
+        line-height: 1.7;
+    }
+    span.mcb-container .mcb-label .mcb {
+        margin: 0 3px 0 5px;
+    }
+    span.mcb-container .mcb-add-label {
+        cursor: default !important;
+    }
+    span.mcb-container .mcb-add-label .plus_icon {
+        font-weight: bold;
+        vertical-align: middle;
+    }
+    span.mcb-container .mcb-add-label .mcb-add-input {
+        width: 120px;
+        margin-left: 10px;
+        padding: 0;
+        border: 1px solid #E5E5E5;
+        background: url(../images/create.gif) no-repeat 2px 50%;
+        font-size: 100%;
+    }
+
+    /* タグモードCSS */
+    span.mcb-tags .mcb-label {
+        display: inline-block;
+        margin-right: 5px;
+        padding: 0 10px;
+        -moz-border-radius:10px 10px 10px 10px;
+        -webkit-border-radius:10px 10px 10px 10px;
+        background-color: #E5E5E5;
+        color: #000000;
+        cursor: pointer;
+    }
+    span.mcb-tags .mcb-label-checked {
+        background-color: #658F9A;
+        color: #FFFFFF;
+        font-weight: bold;
+    }
+    span.mcb-tags .mcb-label .mcb {
+        display: none;
+    }
+    span.mcb-tags .mcb-label .mcb-add-input {
+        margin-left: 0;
+    }
+
+    </style>
+    <!-- *** javascript *** -->
+    <script type="text/javascript" src="jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="jQueryMultiCheckbox.min.js"></script>
+    <script type="text/javascript">    
+    jQuery(function($){
+        $('.multicheck').multicheckbox();
+        $('.multicheck2').multicheckbox({show:'show',add: true});
+        $('.multicheck3').multicheckbox({label:'ブラジル,ポルトガル,スペイン,オランダ'});
+        $('.multicheck4').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ,イン',sort:'ascend'});
+        $('.multicheck5').multicheckbox({
+            show:'show',
+            insert:'after',
+            add: true,
+            tags:false,
+            label:{
+                "Brazil":"ブラジル",
+                "Portugal":"ポルトガル",
+                "Gal":"ガル",
+                "Spain":"スペイン",
+                "Holland":"オランダ"
+            },
+            sort: 'ascend'
+        });
+    });
+    </script>
+</head>
+<body>
+<div id="page">
+
+<h1>jQuery Multi-checkbox のサンプル</h1>
+
+<h2>サンプル1</h2>
+<pre><code>jQuery(function($){
+    $('.multicheck').multicheckbox();
+});
+
+&lt;p&gt;&lt;input class=&quot;multicheck&quot; type=&quot;text&quot; title=&quot;&#12496;&#12483;&#12472;&#12519;,&#12472;&#12540;&#12467;,&#12463;&#12521;&#12452;&#12501;,&#12525;&#12510;&#12540;&#12522;&#12458;&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+</code></pre>
+
+<p><input class="multicheck" type="text" title="バッジョ,ジーコ,クライフ,ロマーリオ" value="" /></p>
+
+<h2>サンプル2（showオプションを設定：テキストフィールドを表示して確認）</h2>
+<pre><code>jQuery(function($){
+    $('.multicheck2').multicheckbox({show:'show',add: true,});
+});
+
+&lt;p&gt;&lt;input class=&quot;multicheck2&quot; type=&quot;text&quot; title=&quot;&#12496;&#12483;&#12472;&#12519;,&#12472;&#12540;&#12467;,&#12463;&#12521;&#12452;&#12501;,&#12525;&#12510;&#12540;&#12522;&#12458;&quot; value=&quot;バッジョ,クライフ,ピルロ&quot; /&gt;&lt;/p&gt;
+「バッジョ,クライフ」はチェックされていた項目、「ピルロ」はユーザーが追加した項目と仮定する
+</code></pre>
+
+<p><input class="multicheck2" type="text" title="バッジョ,ジーコ,クライフ,ロマーリオ" value="バッジョ,クライフ,ピルロ" /></p>
+
+<h2>サンプル3（labelオプションを設定）</h2>
+<pre><code>jQuery(function($){
+    $('.multicheck3').multicheckbox({label:'&#12502;&#12521;&#12472;&#12523;,&#12509;&#12523;&#12488;&#12460;&#12523;,&#12473;&#12506;&#12452;&#12531;,&#12458;&#12521;&#12531;&#12480;'});
+});
+
+&lt;p&gt;&lt;input class=&quot;multicheck3&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+</code></pre>
+
+<p><input class="multicheck3" type="text" value="" /></p>
+
+<h2>サンプル4（show,labelオプションを設定）</h2>
+<pre><code>jQuery(function($){
+    $('.multicheck4').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ,イン',sort:'ascend'});
+});
+
+&lt;p&gt;&lt;input class=&quot;multicheck4&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+</code></pre>
+
+<p><input class="multicheck4" type="text" value="" /></p>
+
+<h2>サンプル5（labelオプションにオブジェクトを設定、insert:'after'を設定）</h2>
+
+<pre><code>jQuery(function($){
+    $('.multicheck5').multicheckbox({show:'show',insert:'after',add: true,label:{
+            &quot;Brazil&quot;:&quot;&#12502;&#12521;&#12472;&#12523;&quot;,
+            &quot;Portugal&quot;:&quot;&#12509;&#12523;&#12488;&#12460;&#12523;&quot;,
+            &quot;gal&quot;:&quot;&#12460;&#12523;&quot;,
+            &quot;Spain&quot;:&quot;&#12473;&#12506;&#12452;&#12531;&quot;,
+            &quot;Holland&quot;:&quot;&#12458;&#12521;&#12531;&#12480;&quot;
+        },
+        sort: 'ascend'
+    });
+});
+
+&lt;p&gt;&lt;input class=&quot;multicheck5&quot; type=&quot;text&quot; value=&quot;Brazil,Spain,Japan&quot; /&gt;&lt;/p&gt;
+「Brazil,Spain」はチェックされていた項目、「Japan」はユーザーが追加した項目と仮定する
+</code></pre>
+<p><input class="multicheck5" type="text" value="Brazil,Spain,Japan" /></p>
+
+</div>
+</body>
+</html>
