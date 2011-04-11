@@ -59,12 +59,15 @@
             }
             $container.html(label_html.join(''));
 
+            // チェック済みのチェックボックスにチェックを入れる
             var checked = $self.val() ? $self.val().split(',') : [],
                 checked_count = checked.length;
 
             for (var i = 0; i < checked_count; i++) {
                 checked[i] = $.trim(checked[i]);
             }
+
+            $container.find(':checkbox').val(checked);
 
             $self[op.show]();
 
