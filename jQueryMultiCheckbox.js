@@ -28,6 +28,14 @@
             var $container = (op.insert == 'before') ? $self.prev(): $self.next();
 
             // label, input:checkbox の挿入
+            var mcb_label = function(value, label){
+                return [
+                    '<label class="mcb-label">',
+                        '<input class="mcb-checkbox" type="checkbox" name="' + value + '" value="' + value + '" />',
+                        label,
+                    '</label>'
+                ].join('');
+            }
             var label_html = [],
                 checkboxs = [];
             if (typeof(op.label) == 'object') {
@@ -35,11 +43,11 @@
                     checkboxs = sortHashKey(op.label, op.sort);
                     for (var i = 0, n = checkboxs.length; i < n; i++) {
                         var key = checkboxs[i];
-                        label_html.push('<label class="mcb-label"><input type="checkbox" name="' + key + '" value="' + key + '" />' + op.label[key] + '</label>');
+                        label_html.push(mcb_label(key, op.label[key]));
                     }
                 } else {
                     for (var key in op.label) {
-                        label_html.push('<label class="mcb-label"><input type="checkbox" name="' + key + '" value="' + key + '" />' + op.label[key] + '</label>');
+                        label_html.push(mcb_label(key, key));
                     }
                 }
             } else {
@@ -54,8 +62,11 @@
                     checkboxs.reverse();
                 }
                 for (var i = 0, n = checkboxs.length; i < n; i++) {
-                    label_html.push('<label class="mcb-label"><input type="checkbox" name="' + checkboxs[i] + '" value="' + checkboxs[i] + '" />' + checkboxs[i] + '</label>');
+                    label_html.push(mcb_label(checkboxs[i], checkboxs[i]));
                 }
+            }
+            if (op.add) {
+                label_html.push('<input class="mcb-add-item" type="text" value="+" />');
             }
             $container.html(label_html.join(''));
 
