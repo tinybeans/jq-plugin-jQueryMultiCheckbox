@@ -22,7 +22,7 @@
             var $self = $(this),
                 self = $self.get(0);
 
-            var container_class = op.tags ? 'mcb-container mcb-tags' : 'mcb-container';
+            var container_class = op.skin ? 'mcb-container mcb-skin-tags' : 'mcb-container';
             $self[op.insert]('<span class="' + container_class+ '">test</span>');
             var $container = (op.insert == 'before') ? $self.prev(): $self.next();
 
@@ -166,7 +166,7 @@
         label: '', // カンマ区切りの文字列か{'key1':'value1','key2':'value2'}のハッシュ
         insert: 'before', // 'before' or 'after'
         add: false, // ユーザーがチェックボックスを追加できるようにする場合はtrue
-        tags: false, // タグデザインを適用する場合はtrue
+        skin: false, // タグデザインを適用する場合は'tags'
         sort: '' // 'ascend'（昇順）,'descend'（降順）
     };
 
