@@ -28,14 +28,17 @@
             var $container = (op.insert == 'before') ? $self.prev(): $self.next();
 
             // label, input:checkbox の挿入
-            var mcb_label = function(value, label){
+            var mcb_label = function(value, label, bool_checked){
+                var checked_class = bool_checked ? ' mcb-label-checked': '';
+                var checked_attr = bool_checked ? ' checked="checked"': '';
                 return [
-                    '<label class="mcb-label">',
-                        '<input class="mcb-checkbox" type="checkbox" name="' + value + '" value="' + value + '" />',
+                    '<label class="mcb-label' + checked_class + '">',
+                        '<input class="mcb-checkbox" type="checkbox" name="' + value + '" value="' + value + '"' + checked_attr + ' />',
                         label,
                     '</label>'
                 ].join('');
             }
+
             var label_html = [],
                 checkboxs = [];
             if (typeof(op.label) == 'object') {
@@ -78,11 +81,44 @@
                 checked[i] = $.trim(checked[i]);
             }
 
-            $container.find(':checkbox').val(checked).click(checkboxClick);
+            $container.find('input:checkbox').val(checked).click(checkboxClick);
 
             $self[op.show]();
 
             $.data(self, 'mcb-lists', checked);
+
+            // ユーザーが項目を追加できるようにする
+            if (op.add) {
+                $container.find('input.mcb-add-item')
+                    .focus(function(){
+                        if ($(this).val() == '+') $(this).val('');
+                    })
+                    .blur(function(){
+                        if ($(this).val() == '') $(this).val('+');
+                    })
+                    .keydown(function(e){
+                        var keycode = e.which || e.keyCode;
+                        if (keycode == 13) {
+                            var value = $(this).val(),
+                                label;
+                            if (!value) return;
+                            if (value.indexOf(':') > 0) {
+                                var obj = value.split(':');
+                                value = obj[0];
+                                label = obj[1];
+                            } else {
+                                label = value;
+                            }
+                            $(this).val('')
+                                .before(mcb_label(value, label, true))
+                                .prev()
+                                    .children('input:checkbox').click(checkboxClick);
+                            checked.push(value);
+                            $.data(self, 'mcb-lists', checked);
+                            $self.val(checked.join(','));
+                        }
+                    });
+            }
 
             // チェックボックスをクリックしたとき
             function checkboxClick(){
