@@ -7,9 +7,8 @@
  * http://sourceforge.jp/projects/opensource/wiki/licenses%2FMIT_license
  *
  * Since:   2010-06-22
- * Update:  2011-01-07
- * version: 0.11
- * Comment: ラベルをソートできるようにした（ハッシュ指定の場合はキーを基準にソート）
+ * Update:  2011-04-13
+ * version: 0.12 for MTAppjQuery.js
  *
  * jQuery 1.3 later (maybe...)
  * 
