@@ -104,8 +104,8 @@
                             if (!value) return;
                             if (value.indexOf(':') > 0) {
                                 var obj = value.split(':');
-                                value = obj[0];
-                                label = obj[1];
+                                value = $.trim(obj[0]);
+                                label = $.trim(obj[1]);
                             } else {
                                 label = value;
                             }
