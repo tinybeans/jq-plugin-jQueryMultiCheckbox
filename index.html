@@ -72,6 +72,7 @@
     <script type="text/javascript">    
     jQuery(function($){
         $('.multicheck').multicheckbox();
+        $('.multicheck1').multicheckbox({show:'show',add: true});
         $('.multicheck2').multicheckbox({show:'show',add: true});
         $('.multicheck3').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ'});
         $('.multicheck4').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ,イン',sort:'ascend',add: true});
@@ -118,6 +119,14 @@
 </code></pre>
 
 <p><input class="multicheck" type="text" title="バッジョ,ジーコ,クライフ,ロマーリオ" value="" /></p>
+
+<h2>サンプル1-2（add: true）</h2>
+<pre><code>$('.multicheck').multicheckbox({add: true});
+
+&lt;input class=&quot;multicheck&quot; type=&quot;text&quot; title=&quot;&quot; value=&quot;&quot; /&gt;
+</code></pre>
+
+<p><input class="multicheck1" type="text" title="" value="" /></p>
 
 <h2>サンプル2（add: true）</h2>
 <pre><code>$('.multicheck2').multicheckbox({show:'show',add: true});
