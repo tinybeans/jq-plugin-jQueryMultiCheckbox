@@ -73,13 +73,25 @@
     jQuery(function($){
         $('.multicheck').multicheckbox();
         $('.multicheck2').multicheckbox({show:'show',add: true});
-        $('.multicheck3').multicheckbox({label:'ブラジル,ポルトガル,スペイン,オランダ'});
-        $('.multicheck4').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ,イン',sort:'ascend'});
+        $('.multicheck3').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ'});
+        $('.multicheck4').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ,イン',sort:'ascend',add: true});
         $('.multicheck5').multicheckbox({
             show:'show',
             insert:'after',
             add: true,
-            tags:false,
+            label:{
+                "Brazil":"ブラジル",
+                "Portugal":"ポルトガル",
+                "Gal":"ガル",
+                "Spain":"スペイン",
+                "Holland":"オランダ"
+            }
+        });
+        $('.multicheck6').multicheckbox({
+            show:'show',
+            insert:'after',
+            add: true,
+            tags:'tags',
             label:{
                 "Brazil":"ブラジル",
                 "Portugal":"ポルトガル",
@@ -95,67 +107,85 @@
 <body>
 <div id="page">
 
+<p>※すべて「show: 'show'」を設定</p>
+
 <h1>jQuery Multi-checkbox のサンプル</h1>
 
-<h2>サンプル1</h2>
-<pre><code>jQuery(function($){
-    $('.multicheck').multicheckbox();
-});
+<h2>サンプル1（デフォルト）</h2>
+<pre><code>$('.multicheck').multicheckbox();
 
-&lt;p&gt;&lt;input class=&quot;multicheck&quot; type=&quot;text&quot; title=&quot;&#12496;&#12483;&#12472;&#12519;,&#12472;&#12540;&#12467;,&#12463;&#12521;&#12452;&#12501;,&#12525;&#12510;&#12540;&#12522;&#12458;&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;input class=&quot;multicheck&quot; type=&quot;text&quot; title=&quot;バッジョ,ジーコ,クライフ,ロマーリオ&quot; value=&quot;&quot; /&gt;
 </code></pre>
 
 <p><input class="multicheck" type="text" title="バッジョ,ジーコ,クライフ,ロマーリオ" value="" /></p>
 
-<h2>サンプル2（showオプションを設定：テキストフィールドを表示して確認）</h2>
-<pre><code>jQuery(function($){
-    $('.multicheck2').multicheckbox({show:'show',add: true,});
-});
+<h2>サンプル2（add: true）</h2>
+<pre><code>$('.multicheck2').multicheckbox({show:'show',add: true});
 
-&lt;p&gt;&lt;input class=&quot;multicheck2&quot; type=&quot;text&quot; title=&quot;&#12496;&#12483;&#12472;&#12519;,&#12472;&#12540;&#12467;,&#12463;&#12521;&#12452;&#12501;,&#12525;&#12510;&#12540;&#12522;&#12458;&quot; value=&quot;バッジョ,クライフ,ピルロ&quot; /&gt;&lt;/p&gt;
+&lt;input class=&quot;multicheck2&quot; type=&quot;text&quot; title=&quot;バッジョ,ジーコ,クライフ,ロマーリオ&quot; value=&quot;バッジョ, クライフ, ピルロ&quot; /&gt;
 「バッジョ,クライフ」はチェックされていた項目、「ピルロ」はユーザーが追加した項目と仮定する
 </code></pre>
 
 <p><input class="multicheck2" type="text" title="バッジョ,ジーコ,クライフ,ロマーリオ" value="バッジョ, クライフ, ピルロ" /></p>
 
-<h2>サンプル3（labelオプションを設定）</h2>
-<pre><code>jQuery(function($){
-    $('.multicheck3').multicheckbox({label:'&#12502;&#12521;&#12472;&#12523;,&#12509;&#12523;&#12488;&#12460;&#12523;,&#12473;&#12506;&#12452;&#12531;,&#12458;&#12521;&#12531;&#12480;'});
-});
+<h2>サンプル3（label: 文字列）</h2>
+<pre><code>$('.multicheck3').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ'});
 
-&lt;p&gt;&lt;input class=&quot;multicheck3&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;input class=&quot;multicheck3&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;
 </code></pre>
 
 <p><input class="multicheck3" type="text" value="" /></p>
 
-<h2>サンプル4（show,labelオプションを設定）</h2>
-<pre><code>jQuery(function($){
-    $('.multicheck4').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ,イン',sort:'ascend'});
-});
+<h2>サンプル4（label: 文字列,sort:'ascend',add: true）</h2>
+<pre><code>$('.multicheck4').multicheckbox({show:'show',label:'ブラジル,ポルトガル,スペイン,オランダ,イン',sort:'ascend',add: true});
 
-&lt;p&gt;&lt;input class=&quot;multicheck4&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;input class=&quot;multicheck4&quot; type=&quot;text&quot; value=&quot;&quot; /&gt;
 </code></pre>
 
 <p><input class="multicheck4" type="text" value="" /></p>
 
-<h2>サンプル5（labelオプションにオブジェクトを設定、insert:'after'を設定）</h2>
+<h2>サンプル5（label: オブジェクト,show:'show',insert:'after',add: true）</h2>
 
-<pre><code>jQuery(function($){
-    $('.multicheck5').multicheckbox({show:'show',insert:'after',add: true,label:{
-            &quot;Brazil&quot;:&quot;&#12502;&#12521;&#12472;&#12523;&quot;,
-            &quot;Portugal&quot;:&quot;&#12509;&#12523;&#12488;&#12460;&#12523;&quot;,
-            &quot;gal&quot;:&quot;&#12460;&#12523;&quot;,
-            &quot;Spain&quot;:&quot;&#12473;&#12506;&#12452;&#12531;&quot;,
-            &quot;Holland&quot;:&quot;&#12458;&#12521;&#12531;&#12480;&quot;
-        },
-        sort: 'ascend'
-    });
+<pre><code>$('.multicheck5').multicheckbox({
+    show:'show',
+    insert:'after',
+    add: true,
+    label:{
+        "Brazil":"ブラジル",
+        "Portugal":"ポルトガル",
+        "Gal":"ガル",
+        "Spain":"スペイン",
+        "Holland":"オランダ"
+    }
 });
 
-&lt;p&gt;&lt;input class=&quot;multicheck5&quot; type=&quot;text&quot; value=&quot;Brazil,Spain,Japan&quot; /&gt;&lt;/p&gt;
+&lt;input class=&quot;multicheck5&quot; type=&quot;text&quot; value=&quot;Brazil,Spain,Japan&quot; /&gt;
 「Brazil,Spain」はチェックされていた項目、「Japan」はユーザーが追加した項目と仮定する
 </code></pre>
 <p><input class="multicheck5" type="text" value="Brazil,Spain,Japan" /></p>
+
+<h2>サンプル6（label: オブジェクト,show:'show',insert:'after',add: true,tags:'tags',sort: 'ascend'）</h2>
+
+<pre><code>$('.multicheck6').multicheckbox({
+    show:'show',
+    insert:'after',
+    add: true,
+    tags:'tags',
+    label:{
+        "Brazil":"ブラジル",
+        "Portugal":"ポルトガル",
+        "Gal":"ガル",
+        "Spain":"スペイン",
+        "Holland":"オランダ"
+    },
+    sort: 'ascend'
+});
+
+
+&lt;input class=&quot;multicheck6&quot; type=&quot;text&quot; value=&quot;Brazil,Spain,Japan&quot; /&gt;
+「Brazil,Spain」はチェックされていた項目、「Japan」はユーザーが追加した項目と仮定する
+</code></pre>
+<p><input class="multicheck6" type="text" value="Brazil,Spain,Japan" /></p>
 
 </div>
 </body>

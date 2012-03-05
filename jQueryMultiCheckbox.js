@@ -1,17 +1,17 @@
 /*
  * jqueryMultiCheckbox.js
  *
- * Copyright (c) 2010 Tomohiro Okuwaki (http://www.tinybeans.net/blog/)
+ * Copyright (c) Tomohiro Okuwaki (http://www.tinybeans.net/blog/)
  * Licensed under MIT Lisence:
  * http://www.opensource.org/licenses/mit-license.php
  * http://sourceforge.jp/projects/opensource/wiki/licenses%2FMIT_license
  *
  * Since:   2010-06-22
- * Update:  2011-04-13
- * version: 0.12 for MTAppjQuery.js
+ * Update:  2012-03-05
+ * version: 0.13
  *
  * jQuery 1.3 later (maybe...)
- * 
+ *
  */
 (function($){
     $.fn.multicheckbox = function(options){
@@ -19,41 +19,40 @@
 
         return this.each(function(idx){
 
-            var $self = $(this),
-                self = $self.get(0);
-
-            var container_class = op.skin ? 'mcb-container mcb-skin-tags' : 'mcb-container';
-            $self[op.insert]('<span class="' + container_class+ '">test</span>');
-            var $container = (op.insert == 'before') ? $self.prev(): $self.next();
-
-            // label, input:checkbox の挿入
-            var mcb_label = function(value, label, bool_checked){
-                var checked_class = bool_checked ? ' mcb-label-checked': '';
-                var checked_attr = bool_checked ? ' checked="checked"': '';
-                return [
-                    '<label class="mcb-label' + checked_class + '">',
-                        '<input class="mcb-checkbox" type="checkbox" name="' + value + '" value="' + value + '"' + checked_attr + ' />',
-                        label,
-                    '</label>'
-                ].join('');
+            var self = this, $self = $(this), selfVals = (this.value !== '') ? this.value.split(','): [];
+            var checked = [];
+            if (selfVals.length > 0) {
+                for (var i = 0, n = selfVals.length; i < n; i++) {
+                    selfVals[i] = $.trim(selfVals[i]);
+                    checked[i] = $.trim(selfVals[i]);
+                }
             }
+            var containerClass = (op.skin === 'tags') ? 'mcb-container mcb-skin-tags' : 'mcb-container';
+            var $container = $('<span class="' + containerClass+ '">test</span>');
+            $self[op.insert]($container);
 
-            var label_html = [],
-                checkboxs = [];
-            if (typeof(op.label) == 'object') {
-                if (op.sort != '') {
+            var labels = [], checkboxs = [];
+            // labelオプションがオブジェクトの場合
+            if (typeof op.label === 'object') {
+                if (op.sort === '') {
+                    for (var key in op.label) {
+                        var boolCheck = boolCheckSplice(key, selfVals);
+                        labels.push(makeLabel(key, op.label[key], boolCheck));
+console.log(makeLabel(key, op.label[key], boolCheck));
+                    }
+                } else {
                     checkboxs = sortHashKey(op.label, op.sort);
                     for (var i = 0, n = checkboxs.length; i < n; i++) {
                         var key = checkboxs[i];
-                        label_html.push(mcb_label(key, op.label[key]));
-                    }
-                } else {
-                    for (var key in op.label) {
-                        label_html.push(mcb_label(key, key));
+                        var boolCheck = boolCheckSplice(key, selfVals);
+                        labels.push(makeLabel(key, op.label[key], boolCheck));
+console.log(makeLabel(key, op.label[key], boolCheck));
                     }
                 }
-            } else {
+            // labelオプションがカンマ区切りのテキストもしくは空の場合
+            } else if (typeof op.label === 'string') {
                 checkboxs = (op.label == '') ? $self.attr('title').split(',') : op.label.split(',');
+                if (checkboxs.length < 1) return;
                 for (var i = 0, n = checkboxs.length; i < n; i++) {
                     checkboxs[i] = $.trim(checkboxs[i]);
                 }
@@ -64,29 +63,24 @@
                     checkboxs.reverse();
                 }
                 for (var i = 0, n = checkboxs.length; i < n; i++) {
-                    label_html.push(mcb_label(checkboxs[i], checkboxs[i]));
+                    var boolCheck = boolCheckSplice(checkboxs[i], selfVals);
+                    labels.push(makeLabel(checkboxs[i], checkboxs[i], boolCheck));
                 }
             }
+            if (selfVals.length > 0) {
+                for (var i = 0, n = selfVals.length; i < n; i++) {
+                    labels.push(makeLabel(selfVals[i], selfVals[i], true));
+                }
+            }
+console.log(selfVals);
+            // addオプションがtrueの場合（ユーザー追加可能の場合）
             if (op.add) {
-                label_html.push('<input class="mcb-add-item" type="text" value="+" />');
+                labels.push('<input class="mcb-add-item" type="text" value="+" />');
             }
-            $container.html(label_html.join(''));
-
-            // チェック済みのチェックボックスにチェックを入れる
-            var checked = $self.val() ? $self.val().split(',') : [],
-                checked_count = checked.length;
-
-            for (var i = 0; i < checked_count; i++) {
-                checked[i] = $.trim(checked[i]);
-            }
-
             $container
-                .find('input:checkbox').val(checked).click(checkboxClick)
-                .end()
-                .find('input:checked')
-                    .each(function(){
-                        $(this).parent().addClass('mcb-label-checked');
-                    });
+                .html(labels.join(''))
+                .find('input:checkbox')
+                    .bind('click', checkboxClick);
 
             $self[op.show]();
 
@@ -96,10 +90,10 @@
             if (op.add) {
                 $container.find('input.mcb-add-item')
                     .focus(function(){
-                        if ($(this).val() == '+') $(this).val('');
+                        if ($(this).val() === '+') $(this).val('');
                     })
                     .blur(function(){
-                        if ($(this).val() == '') $(this).val('+');
+                        if ($(this).val() === '') $(this).val('+');
                     })
                     .keydown(function(e){
                         var keycode = e.which || e.keyCode;
@@ -115,7 +109,7 @@
                                 label = value;
                             }
                             $(this).val('')
-                                .before(mcb_label(value, label, true))
+                                .before(makeLabel(value, label, true))
                                 .prev()
                                     .children('input:checkbox').click(checkboxClick);
                             checked.push(value);
@@ -124,6 +118,28 @@
                             return false;
                         }
                     });
+            }
+
+            function boolCheckSplice(key, arry){
+                var idx = $.inArray(key, arry);
+                if (idx >= 0) {
+                    arry.splice(idx, 1);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            // label, input:checkbox の挿入
+            function makeLabel(value, label, bool_checked){
+                var classname = bool_checked ? ' mcb-label-checked': '';
+                var checked = bool_checked ? ' checked="checked"': '';
+                return [
+                    '<label class="mcb-label' + classname + '">',
+                        '<input class="mcb-checkbox" type="checkbox" value="' + value + '"' + checked + ' />',
+                        label,
+                    '</label>'
+                ].join('');
             }
 
             // チェックボックスをクリックしたとき
@@ -147,7 +163,7 @@
             }
 
             // 連想配列のキーを並べ替える
-            function sortHashKey(obj,rule){ // rule = 'ascend','descend'
+            function sortHashKey(obj, rule){ // rule = 'ascend','descend'
                 var keys = [], values = [];
                 for (var key in obj) {
                     keys.push(key);
@@ -160,14 +176,11 @@
                         keys.sort();
                         keys.reverse();
                         break;
-                    default:
-                        keys.sort();
-                        break;
                 }
                 return keys;
             }
         });
-    };    
+    };
     $.fn.multicheckbox.defaults = {
         show: 'hide', // 'hide' or 'show' 元のテキストフィールドを非表示にするか否か
         label: '', // カンマ区切りの文字列か{'key1':'value1','key2':'value2'}のハッシュ
