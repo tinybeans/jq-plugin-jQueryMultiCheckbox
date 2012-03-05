@@ -38,7 +38,6 @@
                     for (var key in op.label) {
                         var boolCheck = boolCheckSplice(key, selfVals);
                         labels.push(makeLabel(key, op.label[key], boolCheck));
-console.log(makeLabel(key, op.label[key], boolCheck));
                     }
                 } else {
                     checkboxs = sortHashKey(op.label, op.sort);
@@ -46,7 +45,6 @@ console.log(makeLabel(key, op.label[key], boolCheck));
                         var key = checkboxs[i];
                         var boolCheck = boolCheckSplice(key, selfVals);
                         labels.push(makeLabel(key, op.label[key], boolCheck));
-console.log(makeLabel(key, op.label[key], boolCheck));
                     }
                 }
             // labelオプションがカンマ区切りのテキストもしくは空の場合
@@ -72,10 +70,11 @@ console.log(makeLabel(key, op.label[key], boolCheck));
                     labels.push(makeLabel(selfVals[i], selfVals[i], true));
                 }
             }
-console.log(selfVals);
             // addオプションがtrueの場合（ユーザー追加可能の場合）
-            if (op.add) {
+            if (op.add && op.skin == false) {
                 labels.push('<input class="mcb-add-item" type="text" value="+" />');
+            } else {
+                labels.push('<input class="mcb-add-item" type="text" value="" />');
             }
             $container
                 .html(labels.join(''))
@@ -90,10 +89,10 @@ console.log(selfVals);
             if (op.add) {
                 $container.find('input.mcb-add-item')
                     .focus(function(){
-                        if ($(this).val() === '+') $(this).val('');
+                        if ($(this).val() === '+' && op.skin == false) $(this).val('');
                     })
                     .blur(function(){
-                        if ($(this).val() === '') $(this).val('+');
+                        if ($(this).val() === '' && op.skin == false) $(this).val('+');
                     })
                     .keydown(function(e){
                         var keycode = e.which || e.keyCode;
